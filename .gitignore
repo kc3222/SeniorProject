@@ -1,0 +1,13 @@
+__pycache__
+*.DS_Store
+*.vscode
+scripts/*.tar.gz
+scripts/*.bin
+scripts/*.tar
+scripts/*/*.tar.gz
+scripts/*/*/*.tar.gz
+scripts/*/*.bin
+scripts/*/*.tar
+scripts/UDA/new_train.txt
+scripts/UDA/train.txt
+scripts/biobert_v1.1_pubmed/

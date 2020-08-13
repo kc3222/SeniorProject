@@ -56,13 +56,11 @@ TRAIN_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/train_labels.json'
 # TRAIN_PATH = './combined_back_translate_train_labels.json'
 VALIDATION_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/validation_labels.json'
 TEST_PATH = 'https://s3-us-west-2.amazonaws.com/pubmed-rct/test_labels.json'
-# vocab_path = "./biobert_v1.1_pubmed/vocab.txt"
-# pretrained_model_weight_path = "./biobert_v1.1_pubmed/weights.tar.gz"
-vocab_path = "./scibert_scivocab_uncased/vocab.txt"
-pretrained_model_weight_path = "./scibert_scivocab_uncased/weights.tar.gz"
+vocab_path = "./biobert_v1.1_pubmed/vocab.txt"
+pretrained_model_weight_path = "./biobert_v1.1_pubmed/weights.tar.gz"
 num_patience = 3
 num_epochs = 50
-cuda_devices = [0, 1, 2, 3]
+cuda_devices = [0, 1]
 y_true_pred_val_path = 'biobert_y_true_pred_val.csv'
 y_true_pred_test_path = 'biobert_y_true_pred_test.csv'
 
@@ -214,10 +212,10 @@ bert_embedder = PretrainedBertEmbedder(
     requires_grad=False
 )
 
-for param in bert_embedder.bert_model.encoder.layer[8:].parameters():
-    param.requires_grad = True
-# for param in bert_embedder.bert_model.encoder.layer[:].parameters():
+# for param in bert_embedder.bert_model.encoder.layer[8:].parameters():
 #     param.requires_grad = True
+for param in bert_embedder.bert_model.encoder.layer[:].parameters():
+    param.requires_grad = True
 
 
 word_embeddings: TextFieldEmbedder = BasicTextFieldEmbedder(
@@ -268,13 +266,13 @@ embeddings = model.text_field_embedder(tokens)
 # %%
 """Train"""
 # Custom SGD for each layer
-optimizer = optim.SGD([{'params': model.text_field_embedder.token_embedder_tokens.bert_model.encoder.layer[11].parameters(), 'lr': 0.001},
-                        {'params': model.text_field_embedder.token_embedder_tokens.bert_model.encoder.layer[10].parameters(), 'lr': 0.00095},
-                        {'params': model.text_field_embedder.token_embedder_tokens.bert_model.encoder.layer[9].parameters(), 'lr': 0.0009},
-                        {'params': model.text_field_embedder.token_embedder_tokens.bert_model.encoder.layer[8].parameters(), 'lr': 0.000855}
-                        ], lr=0.001)
+# optimizer = optim.SGD([{'params': model.text_field_embedder.token_embedder_tokens.bert_model.encoder.layer[11].parameters(), 'lr': 0.001},
+#                         {'params': model.text_field_embedder.token_embedder_tokens.bert_model.encoder.layer[10].parameters(), 'lr': 0.00095},
+#                         {'params': model.text_field_embedder.token_embedder_tokens.bert_model.encoder.layer[9].parameters(), 'lr': 0.0009},
+#                         {'params': model.text_field_embedder.token_embedder_tokens.bert_model.encoder.layer[8].parameters(), 'lr': 0.000855}
+#                         ], lr=0.001)
 # BertAdam
-# optimizer = BertAdam(model.parameters(), lr=2e-5)
+optimizer = BertAdam(model.parameters(), lr=2e-5)
 # Default
 # optimizer = optim.SGD(model.parameters(), lr=0.001)
 

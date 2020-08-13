@@ -11,3 +11,4 @@ scripts/*/*.tar
 scripts/UDA/new_train.txt
 scripts/UDA/train.txt
 scripts/biobert_v1.1_pubmed/
+scripts/test_model*.py

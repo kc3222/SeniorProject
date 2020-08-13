@@ -41,13 +41,12 @@ y_pred_test = np.array(df_test['y_pred'])
 
 cm = metrics.confusion_matrix(y_true_test, y_pred_test)
 print(cm)
-df_cm = pd.DataFrame(cm, index = ['Non-claims', 'Claims'],
-                  columns = ['Non-claims', 'Claims'])
+df_cm = pd.DataFrame(cm, index = ['true', 'false'],
+                  columns = ['true', 'false'])
 plt.figure(figsize = (6, 6))
 sn.heatmap(df_cm, annot=True, fmt='g')
-plt.xlabel('Predicted claims')
-plt.ylabel('Actual claims')
-plt.title('Confusion matrix for Original Transfer Learning model')
+plt.xlabel('Predicted')
+plt.ylabel('True')
 plt.show()
 
 fpr, tpr, threshold = metrics.roc_curve(y_true_test, y_pred_test)
